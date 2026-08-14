@@ -1,0 +1,49 @@
+services:
+  # ─── Backend API ────────────────────────────────────────────────
+  - type: web
+    name: zerodha-backend
+    runtime: node
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: MONGODB_URI
+        sync: false          # set this manually in Render dashboard
+      - key: FRONTEND_URL
+        sync: false          # set after frontend is deployed
+      - key: DASHBOARD_URL
+        sync: false          # set after dashboard is deployed
+      - key: PORT
+        value: 3000
+
+  # ─── Frontend (Landing Page) ─────────────────────────────────────
+  - type: web
+    name: zerodha-frontend
+    runtime: static
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    envVars:
+      - key: VITE_API_URL
+        sync: false          # set to https://zerodha-backend.onrender.com
+      - key: VITE_DASHBOARD_URL
+        sync: false          # set after dashboard is deployed
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+
+  # ─── Dashboard ───────────────────────────────────────────────────
+  - type: web
+    name: zerodha-dashboard
+    runtime: static
+    rootDir: dashboard
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    envVars:
+      - key: VITE_API_URL
+        sync: false          # set to https://zerodha-backend.onrender.com
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html

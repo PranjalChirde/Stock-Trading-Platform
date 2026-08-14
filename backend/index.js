@@ -27,8 +27,24 @@ main()
         console.log(err);
     });
 
-app.use(cors());
+const allowedOrigins = [
+    process.env.FRONTEND_URL || "http://localhost:5173",
+    process.env.DASHBOARD_URL || "http://localhost:5174",
+];
+
+app.use(cors({
+    origin: function (origin, callback) {
+        // Allow requests with no origin (like mobile apps, curl, Postman)
+        if (!origin) return callback(null, true);
+        if (allowedOrigins.includes(origin)) {
+            return callback(null, true);
+        }
+        return callback(new Error("Not allowed by CORS"));
+    },
+    credentials: true,
+}));
 app.use(bodyParser.json());
+
 
 app.use("/", signupRoute);
 app.use("/", loginRoute);

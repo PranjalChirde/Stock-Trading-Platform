@@ -21,7 +21,7 @@ function Login() {
     setSuccessMsg("");
 
     try {
-      const response = await fetch("http://localhost:3000/login", {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -36,7 +36,7 @@ function Login() {
 
       if (response.ok) {
         setSuccessMsg("Login successful! Redirecting to dashboard...");
-        window.location.href = "http://localhost:5174";
+        window.location.href = import.meta.env.VITE_DASHBOARD_URL;
       } else {
         setErrorMsg(data.message || "Login failed. Please try again.");
       }

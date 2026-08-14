@@ -27,7 +27,7 @@ function Signup() {
     setSuccessMsg("");
 
     try {
-      const response = await fetch("http://localhost:3000/signup", {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/signup`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -43,7 +43,7 @@ function Signup() {
 
       if (response.ok) {
         setSuccessMsg("Account created successfully! Redirecting to dashboard...");
-        window.location.href = "http://localhost:5174";
+        window.location.href = import.meta.env.VITE_DASHBOARD_URL;
       } else {
         setErrorMsg(data.message || "Signup failed. Please try again.");
       }
